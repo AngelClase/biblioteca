@@ -14,7 +14,9 @@ class CategoriaController extends Controller
      */
     public function index()
     {
-        //
+        $categorias = Categoria::all();
+
+        return view('categoria.index', compact('categorias'));
     }
 
     /**
@@ -24,7 +26,7 @@ class CategoriaController extends Controller
      */
     public function create()
     {
-        //
+        return view('categoria.create');
     }
 
     /**
@@ -35,7 +37,14 @@ class CategoriaController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'nombre' => 'required|min:3|max:255'
+        ]);        
+        $input = $request->all();        
+
+        Categoria::create($input);       
+        return redirect()->route('categoria.index')->with('success','Categoria created successfully.');
+
     }
 
     /**
@@ -46,7 +55,7 @@ class CategoriaController extends Controller
      */
     public function show(Categoria $categoria)
     {
-        //
+        return view('categoria.show',compact('categoria'));
     }
 
     /**
@@ -57,7 +66,7 @@ class CategoriaController extends Controller
      */
     public function edit(Categoria $categoria)
     {
-        //
+        return view('categoria.edit',compact('categoria'));
     }
 
     /**
@@ -69,7 +78,14 @@ class CategoriaController extends Controller
      */
     public function update(Request $request, Categoria $categoria)
     {
-        //
+        $request->validate([
+            'nombre' => 'required|min:3|max:255'
+        ]);        
+        $input = $request->all();        
+
+        $categoria->update($input);       
+        return redirect()->route('categoria.index')->with('success','Categoria updated successfully.');
+
     }
 
     /**
@@ -80,6 +96,8 @@ class CategoriaController extends Controller
      */
     public function destroy(Categoria $categoria)
     {
-        //
+        $categoria->delete();
+        return redirect()->route('categoria.index')
+        ->with('success','Categoria deleted successfully');
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Prestamo;
 use Illuminate\Http\Request;
+use Laravel\Ui\Presets\Preset;
 
 class PrestamoController extends Controller
 {
@@ -14,7 +15,9 @@ class PrestamoController extends Controller
      */
     public function index()
     {
-        //
+        $libros = Prestamo::all();
+
+        return view('prestamo.index', compact('prestamos'));
     }
 
     /**
@@ -24,7 +27,7 @@ class PrestamoController extends Controller
      */
     public function create()
     {
-        //
+        return view('prestamo.create');
     }
 
     /**
@@ -35,7 +38,14 @@ class PrestamoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'libro_id' => 'required|min:1|max:255',
+            'user_id' => 'required|min:1|max:255'
+        ]);        
+        $input = $request->all();
+        Prestamo::create($input);       
+        return redirect()->route('prestamo.index')->with('success','Prestamo created successfully.');
+
     }
 
     /**
@@ -46,7 +56,7 @@ class PrestamoController extends Controller
      */
     public function show(Prestamo $prestamo)
     {
-        //
+        return view('prestamo.show',compact('prestamo'));
     }
 
     /**
@@ -57,7 +67,7 @@ class PrestamoController extends Controller
      */
     public function edit(Prestamo $prestamo)
     {
-        //
+        return view('prestamo.edit',compact('prestamo'));
     }
 
     /**
@@ -69,7 +79,15 @@ class PrestamoController extends Controller
      */
     public function update(Request $request, Prestamo $prestamo)
     {
-        //
+        $request->validate([
+            'libro_id' => 'required|min:1|max:255',
+            'user_id' => 'required|min:1|max:255'
+        ]);
+
+        $input = $request->all();
+        $prestamo->update($input);       
+        return redirect()->route('prestamo.index')->with('success','Prestamo updated successfully.');
+
     }
 
     /**
@@ -80,6 +98,8 @@ class PrestamoController extends Controller
      */
     public function destroy(Prestamo $prestamo)
     {
-        //
+        $prestamo->delete();
+        return redirect()->route('prestamo.index')
+        ->with('success','Prestamo deleted successfully');
     }
 }

@@ -7,7 +7,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Faker\Generator as Faker;
 
-class UsuarioSeeder extends Seeder
+class CategoriaSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -16,10 +16,8 @@ class UsuarioSeeder extends Seeder
      */
     public function run(Faker $faker)
     {
-        DB::table('users')->insert([
-            'name' => $faker->name,
-            'email' => $faker->email(),
-            'password' => $faker->password(8, 20),
+        DB::table('categoria')->insert([
+            'nombre' => $faker->name()
         ]);
     }
 }

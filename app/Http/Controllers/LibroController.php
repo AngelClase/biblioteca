@@ -14,7 +14,9 @@ class LibroController extends Controller
      */
     public function index()
     {
-        //
+        $libros = Libro::all();
+
+        return view('libro.index', compact('libros'));
     }
 
     /**
@@ -24,7 +26,7 @@ class LibroController extends Controller
      */
     public function create()
     {
-        //
+        return view('libro.create');
     }
 
     /**
@@ -35,7 +37,24 @@ class LibroController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'isbn' => 'required|min:3|max:255',
+            'nombre' => 'required|min:3|max:255',
+            'categoria_id' => 'required|min:3|max:255',
+            'editorial' => 'required|min:3|max:255',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);        
+        $input = $request->all();        
+        if ($image = $request->file('image')) {
+            $imageDestinationPath = 'uploads/';
+            $postImage = date('YmdHis') . "." . $image->getClientOriginalExtension();
+            $image->move($imageDestinationPath, $postImage);
+            $input['image'] = "$postImage";
+        }
+
+        Libro::create($input);       
+        return redirect()->route('libro.index')->with('success','Libro created successfully.');
+
     }
 
     /**
@@ -46,7 +65,7 @@ class LibroController extends Controller
      */
     public function show(Libro $libro)
     {
-        //
+        return view('libro.show',compact('libro'));
     }
 
     /**
@@ -57,7 +76,7 @@ class LibroController extends Controller
      */
     public function edit(Libro $libro)
     {
-        //
+        return view('libro.edit',compact('libro'));
     }
 
     /**
@@ -69,7 +88,26 @@ class LibroController extends Controller
      */
     public function update(Request $request, Libro $libro)
     {
-        //
+        $request->validate([
+            'isbn' => 'required|min:3|max:255',
+            'nombre' => 'required|min:3|max:255',
+            'categoria_id' => 'required|min:3|max:255',
+            'editorial' => 'required|min:3|max:255',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);        
+        $input = $request->all();        
+        if ($image = $request->file('image')) {
+            $imageDestinationPath = 'uploads/';
+            $postImage = date('YmdHis') . "." . $image->getClientOriginalExtension();
+            $image->move($imageDestinationPath, $postImage);
+            $input['image'] = "$postImage";
+        } else {
+            unset($input['image']);
+        }
+
+        $libro->update($input);    
+        return redirect()->route('libro.index')->with('success','Libro updated successfully.');
+
     }
 
     /**
@@ -80,6 +118,8 @@ class LibroController extends Controller
      */
     public function destroy(Libro $libro)
     {
-        //
+        $libro->delete();
+        return redirect()->route('libro.index')
+        ->with('success','Libro deleted successfully');
     }
 }
