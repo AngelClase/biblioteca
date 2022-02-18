@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Libro;
 use App\Models\Prestamo;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Laravel\Ui\Presets\Preset;
 
 class PrestamoController extends Controller
@@ -15,9 +18,43 @@ class PrestamoController extends Controller
      */
     public function index()
     {
-        $libros = Prestamo::all();
+        $prestamos = Prestamo::all();
 
         return view('prestamo.index', compact('prestamos'));
+    }
+
+    public function devolver()
+    {
+        print_r("aaa");
+    }
+
+    /**
+     * Presta un Libro
+     *
+     * @param  \App\Models\Libro  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function prestar(int $id)
+    { 
+        
+        $libro = Libro::all()->where('id','=',$id)[$id - 1];
+        $puedePedir = $this->cuantosPrestados($libro) < 2;
+        $mensaje = ($this->cuantosPrestados($libro) == 100) ? "El usuario ya ha pedido este libro" : ((!$puedePedir) ? "El usuario tiene mas de dos prestamos activos." : "");
+        
+        return view('prestamo.prestar', compact('libro', 'puedePedir', 'mensaje'));
+    }
+
+    private function cuantosPrestados(Libro $id){
+        $prestados = 0;
+        foreach (Prestamo::all() as $key => $prestamo) {
+            if ($prestamo->user_id == Auth::user()->id) {
+                $prestados += 1;
+                if ($prestamo->libro_id == $id->id) {
+                    return 100;
+                }
+            }
+        }
+        return $prestados;
     }
 
     /**
@@ -40,11 +77,11 @@ class PrestamoController extends Controller
     {
         $request->validate([
             'libro_id' => 'required|min:1|max:255',
-            'user_id' => 'required|min:1|max:255'
+            'user_id' => 'required|min:1|max:255',
         ]);        
         $input = $request->all();
         Prestamo::create($input);       
-        return redirect()->route('prestamo.index')->with('success','Prestamo created successfully.');
+        return redirect()->route('prestamos')->with('success','Prestamo created successfully.');
 
     }
 
@@ -54,9 +91,9 @@ class PrestamoController extends Controller
      * @param  \App\Models\Prestamo  $prestamo
      * @return \Illuminate\Http\Response
      */
-    public function show(Prestamo $prestamo)
+    public function show(int $id)
     {
-        return view('prestamo.show',compact('prestamo'));
+        return $this->prestar($id);
     }
 
     /**
@@ -86,7 +123,7 @@ class PrestamoController extends Controller
 
         $input = $request->all();
         $prestamo->update($input);       
-        return redirect()->route('prestamo.index')->with('success','Prestamo updated successfully.');
+        return redirect()->route('prestamos')->with('success','Prestamo updated successfully.');
 
     }
 
@@ -99,7 +136,7 @@ class PrestamoController extends Controller
     public function destroy(Prestamo $prestamo)
     {
         $prestamo->delete();
-        return redirect()->route('prestamo.index')
+        return redirect()->route('prestamos')
         ->with('success','Prestamo deleted successfully');
     }
 }

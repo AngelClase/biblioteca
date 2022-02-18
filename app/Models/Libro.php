@@ -11,8 +11,8 @@ class Libro extends Model
 
     protected $fillable = ['isbn', 'nombre', 'categoria_id', 'editorial', 'imagen'];
 
-    public function categoria_id(){
-        $this->hasMany(Categoria::class);
+    public function categoria(){
+        return $this->belongsTo(Categoria::class);
     }
 
     public function autores(){

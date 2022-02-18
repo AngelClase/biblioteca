@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Categoria;
 use App\Models\Libro;
 use Illuminate\Http\Request;
 
@@ -38,11 +39,11 @@ class LibroController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'isbn' => 'required|min:3|max:255',
+            'isbn' => 'required|min:17|max:17',
             'nombre' => 'required|min:3|max:255',
-            'categoria_id' => 'required|min:3|max:255',
+            'categoria_id' => 'required|min:1|max:255',
             'editorial' => 'required|min:3|max:255',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);        
         $input = $request->all();        
         if ($image = $request->file('image')) {
@@ -53,7 +54,7 @@ class LibroController extends Controller
         }
 
         Libro::create($input);       
-        return redirect()->route('libro.index')->with('success','Libro created successfully.');
+        return redirect()->route('libros')->with('success','Libro created successfully.');
 
     }
 
@@ -76,7 +77,8 @@ class LibroController extends Controller
      */
     public function edit(Libro $libro)
     {
-        return view('libro.edit',compact('libro'));
+        $categorias = Categoria::all();
+        return view('libro.edit',compact('libro'),compact('categorias'));
     }
 
     /**
@@ -89,11 +91,11 @@ class LibroController extends Controller
     public function update(Request $request, Libro $libro)
     {
         $request->validate([
-            'isbn' => 'required|min:3|max:255',
+            'isbn' => 'required|min:17|max:17',
             'nombre' => 'required|min:3|max:255',
-            'categoria_id' => 'required|min:3|max:255',
+            'categoria_id' => 'required|min:1|max:255',
             'editorial' => 'required|min:3|max:255',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);        
         $input = $request->all();        
         if ($image = $request->file('image')) {
@@ -106,7 +108,7 @@ class LibroController extends Controller
         }
 
         $libro->update($input);    
-        return redirect()->route('libro.index')->with('success','Libro updated successfully.');
+        return redirect()->route('libros')->with('success','Libro updated successfully.');
 
     }
 
@@ -119,7 +121,7 @@ class LibroController extends Controller
     public function destroy(Libro $libro)
     {
         $libro->delete();
-        return redirect()->route('libro.index')
+        return redirect()->route('libro')
         ->with('success','Libro deleted successfully');
     }
 }

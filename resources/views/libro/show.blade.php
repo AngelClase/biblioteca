@@ -1,4 +1,4 @@
-@extends('layout')
+@extends('layouts.app')
  
 @section('content')
     <div class="row">
@@ -8,17 +8,19 @@
             </div>        </div>
     </div>
     <!--ADMIN -->
-    @if(@Auth::user()->hasRole('administrador'))
-    <div class="row">
-        <div class="col-xs-12 col-sm-12 col-md-12">
-            <div class="form-group">
-                <strong>ID:</strong>
-                {{ $libro->id }}
+    @guest
+    @else
+        @if(@Auth::user()->hasRole('administrador'))
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12">
+                    <div class="form-group">
+                        <strong>ID:</strong>
+                        {{ $libro->id }}
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
-    @endif
-
+        @endif
+    @endguest
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="form-group">
@@ -39,7 +41,10 @@
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="form-group">
                 <strong>Categoria:</strong>
-                {{ $libro->categoria_id }}
+                {{ $libro->categoria->nombre }}
+                @if(@Auth::user()->hasRole('administrador'))
+                    (ID: {{ $libro->categoria->id }} )
+                @endif
             </div>
         </div>
     </div>
@@ -58,7 +63,7 @@
             <img src="/uploads/{{ $libro->imagen }}" width="200px">
         </div>
     </div>
-    <div class="row">
-        <a class="btn btn-sm btn-info" href="{{ route('libros.index') }}">Back</a>
+    <div class="row col-2">
+        <a class="btn btn-sm btn-info" href="{{ route('libros') }}">Back</a>
     </div>
 @endsection
