@@ -33,14 +33,17 @@
             <th></th>
         </tr>
         @foreach ($prestamos as $prestamo)
-            @if($prestamo->user_id == @Auth::user()->id || @Auth::user()->hasRole('administrador'))
+            @if(($prestamo->user_id == @Auth::user()->id && $prestamo->fecha_entrega == "") || @Auth::user()->hasRole('administrador'))
             <tr>
                 @if (@Auth::user()->hasRole('administrador'))
                     <td>{{ $prestamo->user->name }}</td> 
                 @endif
                 <td>{{ $prestamo->libro->nombre }}</td>
                 <td>{{ $prestamo->fecha_plazo }}</td>
-                <td>{{ $prestamo->fecha_entrega }}</td>
+                @if(@Auth::user()->hasRole('administrador'))
+                    <td>{{ $prestamo->fecha_entrega }}</td>
+                @endif
+                
                 <td>
                     @if(@Auth::user()->hasRole('administrador'))
                         <a class="btn btn-sm btn-primary" href="">Editar</a>
@@ -51,7 +54,7 @@
                         </form>
                     @endif
                     @if ($prestamo->user_id == @Auth::user()->id)
-                        <a class="btn btn-sm btn-primary" href="{{ route('prestamo.devolver',$prestamo->id) }}">Entregar</a>
+                        <a class="btn btn-sm btn-primary" href="{{ url('gestion/devolver',$prestamo->id) }}">Entregar</a>
                     @endif
                 </td>
             </tr>
