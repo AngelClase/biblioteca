@@ -11,8 +11,13 @@
 
             @else
                 @if(@Auth::user()->hasRole('administrador'))
-                    <div class="d-inline-block">
-                        <a class="btn btn-sm btn-primary" href="{{ route('libros.create') }}">Crear Libro</a>
+                    <div class="row">
+                        <div class="col-4"></div>
+                        <div class="col-4">
+                            <a class="btn btn-sm btn-primary" href="{{ route('libros.create') }}">Crear Libro</a>
+                        </div>
+                        <div class="col-4"></div>
+                        
                     </div>
                     <hr>
                 @endif
@@ -22,6 +27,11 @@
  
 @if ($message = Session::get('success'))
         <div class="alert alert-success">
+            <p>{{ $message }}</p>
+        </div>
+@endif
+@if ($message = Session::get('danger'))
+        <div class="alert alert-danger">
             <p>{{ $message }}</p>
         </div>
 @endif   
@@ -42,13 +52,14 @@
             </ul>
             <div class="card-body">
                 <a class="btn btn-sm btn-info" href="{{ route('libros.show',$libro->id) }}">Mostrar</a>
-                <a class="btn btn-sm btn-primary" href="{{ route('prestamo',$libro->id) }}">Prestar</a>
+                
                 @guest
                     
                 @else
                     @if(@Auth::user()->hasRole('administrador'))
                         <br> <br> <br>
                         <a class="btn btn-sm btn-primary" href="{{ route('libros.edit',$libro->id) }}">Editar</a>
+                        <a class="btn btn-sm btn-primary" href="{{ route('prestamo',$libro->id) }}">Prestar</a>
                         <form class="d-inline-block" action="{{ route('libros.destroy',$libro->id) }}" method="POST">
                             @csrf
                             @method('DELETE')

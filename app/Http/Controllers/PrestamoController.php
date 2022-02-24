@@ -20,13 +20,15 @@ class PrestamoController extends Controller
      */
     public function index()
     {
+        GestionController::isAuth();
         $prestamos = Prestamo::all();
 
         return view('prestamo.index', compact('prestamos'));
     }
 
     public function devolver(int $id)
-    {  
+    {
+        GestionController::isAdmin();
         $prestamo = Prestamo::where('id','=',$id)->first();
         $tieneRetraso = $this->aplicarRetraso($prestamo);
         $libro = $libro = Libro::where('id','=',$prestamo->libro_id)->first();
@@ -59,12 +61,13 @@ class PrestamoController extends Controller
      */
     public function prestar(int $id)
     { 
-        
+        GestionController::isAdmin();
+        $users = User::all();
         $libro = Libro::where('id','=',$id)->first();
         $puedePedir = $this->cuantosPrestados($libro) < 2;
         $mensaje = ($this->cuantosPrestados($libro) == 100) ? "El usuario ya ha pedido este libro" : ((!$puedePedir) ? "El usuario tiene mas de dos prestamos activos." : "");
-        
-        return view('prestamo.prestar', compact('libro', 'puedePedir', 'mensaje'));
+
+        return view('prestamo.prestar', compact('libro', 'puedePedir', 'mensaje','users'));
     }
 
     private function cuantosPrestados(Libro $id){
@@ -87,6 +90,7 @@ class PrestamoController extends Controller
      */
     public function create()
     {
+        GestionController::isAdmin();
         return view('prestamo.create');
     }
 
@@ -116,6 +120,7 @@ class PrestamoController extends Controller
      */
     public function show(int $id)
     {
+        GestionController::isAuth();
         return $this->prestar($id);
     }
 
@@ -127,6 +132,7 @@ class PrestamoController extends Controller
      */
     public function edit(Prestamo $prestamo)
     {
+        GestionController::isAdmin();
         return view('prestamo.edit',compact('prestamo'));
     }
 
@@ -139,6 +145,7 @@ class PrestamoController extends Controller
      */
     public function update(Request $request, Prestamo $prestamo)
     {
+        GestionController::isAdmin();
         $request->validate([
             'libro_id' => 'required|min:1|max:255',
             'user_id' => 'required|min:1|max:255'
@@ -158,6 +165,7 @@ class PrestamoController extends Controller
      */
     public function destroy(Prestamo $prestamo)
     {
+        GestionController::isAdmin();
         $prestamo->delete();
         return redirect()->route('prestamos')
         ->with('success','Prestamo deleted successfully');

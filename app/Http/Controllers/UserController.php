@@ -14,6 +14,7 @@ class UserController extends Controller
      */
     public function index()
     {
+        GestionController::isAdmin();
         $users = User::all();
 
         return view('user.index', compact('users'));
@@ -48,6 +49,7 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
+        GestionController::isAuth();
         return view('user.profile',compact('user'));
     }
 
@@ -59,6 +61,7 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
+        GestionController::isAdmin();
         return view('user.edit',compact('user'));
     }
 
@@ -90,6 +93,7 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
+        GestionController::isAdmin();
         $user->delete();
         return redirect()->route('home')
         ->with('success','User deleted successfully');

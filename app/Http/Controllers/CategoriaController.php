@@ -26,6 +26,7 @@ class CategoriaController extends Controller
      */
     public function create()
     {
+        GestionController::isAdmin();
         return view('categoria.create');
     }
 
@@ -66,6 +67,7 @@ class CategoriaController extends Controller
      */
     public function edit(Categoria $categoria)
     {
+        GestionController::isAdmin();
         return view('categoria.edit',compact('categoria'));
     }
 
@@ -96,6 +98,7 @@ class CategoriaController extends Controller
      */
     public function destroy(Categoria $categoria)
     {
+        GestionController::isAdmin();
         $categoria->delete();
         return redirect()->route('categoria.index')
         ->with('success','Categoria deleted successfully');

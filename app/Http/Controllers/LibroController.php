@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Categoria;
 use App\Models\Libro;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class LibroController extends Controller
 {
@@ -27,8 +28,12 @@ class LibroController extends Controller
      */
     public function create()
     {
+        GestionController::isAdmin();
         return view('libro.create');
+        
     }
+
+
 
     /**
      * Store a newly created resource in storage.
@@ -78,7 +83,9 @@ class LibroController extends Controller
     public function edit(Libro $libro)
     {
         $categorias = Categoria::all();
+        GestionController::isAdmin();
         return view('libro.edit',compact('libro'),compact('categorias'));
+        
     }
 
     /**
@@ -120,8 +127,10 @@ class LibroController extends Controller
      */
     public function destroy(Libro $libro)
     {
+        GestionController::isAdmin();
+
         $libro->delete();
-        return redirect()->route('libro')
-        ->with('success','Libro deleted successfully');
+        return redirect()->route('libro')->with('success','Libro deleted successfully');
+        
     }
 }
