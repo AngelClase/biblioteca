@@ -33,7 +33,9 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav me-auto">
-
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('libros') }}">Libros</a>
+                        </li>
                     </ul>
 
                     <!-- Right Side Of Navbar -->
@@ -65,7 +67,13 @@
                                     </a>
 
                                     <a class="dropdown-item" href="{{ url('/') }}"> Ver Perfil </a>
-                                    <a class="dropdown-item" href="{{ route('prestamos') }}"> Mis Prestamos </a>
+                                    @if (@Auth::user()->hasRole("administrador"))
+                                        <a class="dropdown-item" href="{{ route('prestamos') }}"> Prestamos </a>
+                                    @else
+                                        <a class="dropdown-item" href="{{ route('prestamos') }}"> Mis Prestamos </a>
+                                    @endif
+                                    
+                                    
 
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                                         @csrf

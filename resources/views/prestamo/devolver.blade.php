@@ -68,7 +68,7 @@
     <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="pull-left">
-                <h2> Detalles del prestamo </h2>
+                <h2> Detalles del usuario </h2>
             </div>
         </div>
     </div>
@@ -77,6 +77,25 @@
             <div class="form-group">
                 <strong>Usuario:</strong>
                 {{ $user->name }}
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12">
+            <div class="form-group">
+                <strong>Email:</strong>
+                {{ $user->email }}
+            </div>
+        </div>
+    </div>
+    
+</div>
+
+<div class="row col-10">
+    <div class="row">
+        <div class="col-lg-12 margin-tb">
+            <div class="pull-left">
+                <h2> Detalles del prestamo </h2>
             </div>
         </div>
     </div>
@@ -111,17 +130,17 @@
     @if ($tieneRetraso == true)
         <div class="row col-6">
             <div class="alert alert-danger">
-                <p>Tienes un retraso de {{ $prestamo->retraso }} días, se te aplicarán intereses</p>
+                <p>El usuario tiene un retraso de {{ $prestamo->retraso }} días, se penalizará</p>
             </div>
         </div>
         
     @endif
 
-    <form class="d-inline-block" action="{{ route('prestamos.update',$prestamo->id)}}" method="POST" enctype="multipart/form-data">
+    <form class="d-inline-block" action="{{ route('prestamo.update',$prestamo->id)}}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
         <input type="hidden" value="{{ date("Y-m-d") }}" name="fecha_entrega">
-        <button type="submit" class="btn btn-sm btn-danger">Aplicar Devolucion</button>
+        <button type="submit" class="btn btn-sm btn-primary">Aplicar Devolucion</button>
     </form>
     <div class="d-inline-block">
         <a class="btn btn-sm btn-danger" href="{{ url('/') }}">Cancelar</a>

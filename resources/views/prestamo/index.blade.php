@@ -48,12 +48,8 @@
                     @if(@Auth::user()->hasRole('administrador'))
                         <a class="btn btn-sm btn-primary" href="">Editar</a>
                         <form class="d-inline-block" action="" method="POST">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-sm btn-danger">Borrar</button>
-                        </form>
                     @endif
-                    @if ($prestamo->user_id == @Auth::user()->id)
+                    @if (@Auth::user()->hasRole('administrador'))
                         <a class="btn btn-sm btn-primary" href="{{ url('gestion/devolver',$prestamo->id) }}">Entregar</a>
                     @endif
                 </td>

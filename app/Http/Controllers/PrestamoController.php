@@ -64,20 +64,20 @@ class PrestamoController extends Controller
         GestionController::isAdmin();
         $users = User::all();
         $libro = Libro::where('id','=',$id)->first();
-        $puedePedir = $this->cuantosPrestados($libro) < 2;
-        $mensaje = ($this->cuantosPrestados($libro) == 100) ? "El usuario ya ha pedido este libro" : ((!$puedePedir) ? "El usuario tiene mas de dos prestamos activos." : "");
-
-        return view('prestamo.prestar', compact('libro', 'puedePedir', 'mensaje','users'));
+        
+        if($libro->disponible == true){
+            return view('prestamo.prestar', compact('libro','users'));
+        }else{
+            return redirect()->route('prestamo.index')->with('danger','Este libro ya está prestado.');
+        }
+        
     }
 
-    private function cuantosPrestados(Libro $id){
+    private function cuantosPrestados(int $user_id){
         $prestados = 0;
         foreach (Prestamo::all() as $key => $prestamo) {
-            if ($prestamo->user_id == Auth::user()->id && $prestamo->fecha_entrega == null) {
+            if ($prestamo->user_id == $user_id && $prestamo->fecha_entrega == null) {
                 $prestados += 1;
-                if ($prestamo->libro_id == $id->id && $prestamo->fecha_entrega == null) {
-                    return 100;
-                }
             }
         }
         return $prestados;
@@ -102,13 +102,25 @@ class PrestamoController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'libro_id' => 'required|min:1|max:255',
-            'user_id' => 'required|min:1|max:255',
-        ]);        
-        $input = $request->all();
-        Prestamo::create($input);       
-        return redirect()->route('prestamos')->with('success','Prestamo created successfully.');
+        if($this->cuantosPrestados($request->user_id) < 2){
+            $input = $request->validate([
+                'libro_id' => 'required|min:1|max:255',
+                'user_id' => 'required|min:1|max:255',
+                'fecha_plazo' => 'required|date'
+            ]);        
+            
+            
+            $libro = Libro::where('id','=',$input['libro_id'])
+            ->first();
+            $libro->update(['disponible' => 0]);
+
+            Prestamo::create($input); 
+
+            return redirect()->route('prestamos')->with('success','Prestamo created successfully.');
+        }else{
+            return redirect()->route('libros')->with('danger','El usuario ha prestado mas de dos libros.');
+        }
+        
 
     }
 
@@ -146,12 +158,13 @@ class PrestamoController extends Controller
     public function update(Request $request, Prestamo $prestamo)
     {
         GestionController::isAdmin();
-        $request->validate([
+        
+        $input = $request->validate([
             'libro_id' => 'required|min:1|max:255',
-            'user_id' => 'required|min:1|max:255'
-        ]);
-
-        $input = $request->all();
+            'user_id' => 'required|min:1|max:255',
+            'fecha_entrega' => 'required|date'
+        ]);;
+        
         $prestamo->update($input);       
         return redirect()->route('prestamos')->with('success','Prestamo updated successfully.');
 

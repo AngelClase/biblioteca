@@ -59,7 +59,10 @@
                     @if(@Auth::user()->hasRole('administrador'))
                         <br> <br> <br>
                         <a class="btn btn-sm btn-primary" href="{{ route('libros.edit',$libro->id) }}">Editar</a>
-                        <a class="btn btn-sm btn-primary" href="{{ route('prestamo',$libro->id) }}">Prestar</a>
+                        @if($libro->disponible == true)
+                            <a class="btn btn-sm btn-primary" href="{{ route('prestamo',$libro->id) }}">Prestar</a>
+                        @endif
+                        
                         <form class="d-inline-block" action="{{ route('libros.destroy',$libro->id) }}" method="POST">
                             @csrf
                             @method('DELETE')

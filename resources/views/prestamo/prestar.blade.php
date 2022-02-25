@@ -15,13 +15,6 @@
         </div>
 @endif
 
-@if ($mensaje != "")
-    <div class="alert alert-danger">
-        <p>{{ $mensaje }}</p>
-    </div>
-@endif
-
-@if ($puedePedir)
     <div class="table-responsive">
         <table class="table table-bordered ">
             <tr>
@@ -56,5 +49,4 @@
         </table> 
     </div>
     
-@endif
 @endsection
