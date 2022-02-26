@@ -139,6 +139,8 @@
     <form class="d-inline-block" action="{{ route('prestamo.update',$prestamo->id)}}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
+        <input type="hidden" value="{{ $prestamo->user_id }}" name="user_id">
+        <input type="hidden" value="{{ $prestamo->libro_id }}" name="libro_id">
         <input type="hidden" value="{{ date("Y-m-d") }}" name="fecha_entrega">
         <button type="submit" class="btn btn-sm btn-primary">Aplicar Devolucion</button>
     </form>

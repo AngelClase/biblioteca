@@ -42,13 +42,20 @@
 
         @foreach ($libros as $libro)
         <div class="card col" style="width: 18rem;">
-            <img class="card-img-top" height="200px" width="100px" src="{{ $libro->imagen }}" alt="Imagen del libro {{ $libro->nombre }}">
+            <br>
+            <img class="card-img-top" height="200px" width="150px" src="{{ $libro->imagen }}" alt="Imagen del libro {{ $libro->nombre }}">
             <div class="card-body">
                 <h5 class="card-title">{{ $libro->nombre }}</h5>
             </div>
             <ul class="list-group list-group-flush">
               <li class="list-group-item"><strong>Categoría:</strong> {{ $libro->categoria->nombre }}</li>
               <li class="list-group-item"><strong>Editorial:</strong> {{ $libro->editorial }}</li>
+              @if($libro->disponible == true)
+                <li class="list-group-item"><strong>Disponibilidad:</strong> Disponible</li>
+              @else
+                <li class="list-group-item"><strong>Disponibilidad:</strong> No Disponible</li>
+              @endif
+              
             </ul>
             <div class="card-body">
                 <a class="btn btn-sm btn-info" href="{{ route('libros.show',$libro->id) }}">Mostrar</a>
@@ -60,7 +67,7 @@
                         <br> <br> <br>
                         <a class="btn btn-sm btn-primary" href="{{ route('libros.edit',$libro->id) }}">Editar</a>
                         @if($libro->disponible == true)
-                            <a class="btn btn-sm btn-primary" href="{{ route('prestamo',$libro->id) }}">Prestar</a>
+                            <a class="btn btn-sm btn-primary" href="{{ route('prestar',$libro->id) }}">Prestar</a>
                         @endif
                         
                         <form class="d-inline-block" action="{{ route('libros.destroy',$libro->id) }}" method="POST">

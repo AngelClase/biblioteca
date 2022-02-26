@@ -68,9 +68,15 @@
 
                                     <a class="dropdown-item" href="{{ url('/') }}"> Ver Perfil </a>
                                     @if (@Auth::user()->hasRole("administrador"))
-                                        <a class="dropdown-item" href="{{ route('prestamos') }}"> Prestamos </a>
+                                        <a class="dropdown-item" href="{{ url('prestamo') }}"> Prestamos </a>
                                     @else
-                                        <a class="dropdown-item" href="{{ route('prestamos') }}"> Mis Prestamos </a>
+                                        <a class="dropdown-item" href="{{ url('prestamo') }}"> Mis Prestamos </a>
+                                    @endif
+
+                                    @if (@Auth::user()->hasRole("administrador"))
+                                        <a class="dropdown-item" href="{{ url('sancion') }}"> Sanciones </a>
+                                    @else
+                                        <a class="dropdown-item" href="{{ url('sancion') }}"> Mis Sanciones </a>
                                     @endif
                                     
                                     

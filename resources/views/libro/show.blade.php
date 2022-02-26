@@ -42,9 +42,13 @@
             <div class="form-group">
                 <strong>Categoria:</strong>
                 {{ $libro->categoria->nombre }}
-                @if(@Auth::user()->hasRole('administrador'))
-                    (ID: {{ $libro->categoria->id }} )
-                @endif
+                @guest
+                @else
+                    @if(@Auth::user()->hasRole('administrador'))
+                        (ID: {{ $libro->categoria->id }} )
+                    @endif
+                @endguest
+                
             </div>
         </div>
     </div>

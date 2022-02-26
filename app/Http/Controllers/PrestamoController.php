@@ -106,17 +106,15 @@ class PrestamoController extends Controller
             $input = $request->validate([
                 'libro_id' => 'required|min:1|max:255',
                 'user_id' => 'required|min:1|max:255',
-                'fecha_plazo' => 'required|date'
+                'fecha_plazo' => 'required|date',
             ]);        
             
             
-            $libro = Libro::where('id','=',$input['libro_id'])
-            ->first();
-            $libro->update(['disponible' => 0]);
-
+            DB::table('libros')->where('id',$input['libro_id'])->update(['disponible' => '0']);
+            
             Prestamo::create($input); 
 
-            return redirect()->route('prestamos')->with('success','Prestamo created successfully.');
+            return redirect()->route('libros')->with('success','Prestamo created successfully.');
         }else{
             return redirect()->route('libros')->with('danger','El usuario ha prestado mas de dos libros.');
         }
@@ -158,15 +156,15 @@ class PrestamoController extends Controller
     public function update(Request $request, Prestamo $prestamo)
     {
         GestionController::isAdmin();
-        
         $input = $request->validate([
             'libro_id' => 'required|min:1|max:255',
             'user_id' => 'required|min:1|max:255',
             'fecha_entrega' => 'required|date'
         ]);;
         
-        $prestamo->update($input);       
-        return redirect()->route('prestamos')->with('success','Prestamo updated successfully.');
+        $prestamo->update($input);
+        DB::table('libros')->where('id',$input['libro_id'])->update(['disponible' => '1']);
+        return redirect()->route('libros')->with('success','Prestamo updated successfully.');
 
     }
 
@@ -178,9 +176,11 @@ class PrestamoController extends Controller
      */
     public function destroy(Prestamo $prestamo)
     {
+        
         GestionController::isAdmin();
         $prestamo->delete();
-        return redirect()->route('prestamos')
+        return redirect()->route('prestamo')
         ->with('success','Prestamo deleted successfully');
+        
     }
 }

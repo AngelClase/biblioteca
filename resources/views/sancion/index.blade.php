@@ -5,10 +5,10 @@
         <div class="col-lg-12 margin-tb">
             <div class="pull-left">
                 @if(@Auth::user()->hasRole('administrador'))
-                    <h2 class="text-center">Todos los prestamos</h2>
+                    <h2 class="text-center">Todas las sanciones</h2>
                 @endif
                 @if(@Auth::user()->hasRole('usuario'))
-                    <h2 class="text-center">Mis prestamos</h2>
+                    <h2 class="text-center">Mis sanciones</h2>
                 @endif
                 <br> <br>
             </div>        
@@ -30,26 +30,23 @@
                 @if (@Auth::user()->hasRole('administrador'))
                     <th>Usuario</th>      
                 @endif
-                <th>Libro</th>
-                <th>Fecha Plazo</th>
+                <th>Fecha Inicio</th>
+                <th>Dias de retraso</th>
                 <th>Fecha Entrega</th>
                 <th></th>
             </tr>
-            @foreach ($prestamos as $prestamo)
-                @if(($prestamo->user_id == @Auth::user()->id && $prestamo->fecha_entrega == "") || @Auth::user()->hasRole('administrador'))
+            @foreach ($sanciones as $sancion)
+                @if(($sancion->user_id == @Auth::user()->id && $sancion->retraso <= 0) || @Auth::user()->hasRole('administrador'))
                 <tr>
                     @if (@Auth::user()->hasRole('administrador'))
-                        <td>{{ $prestamo->user->name }}</td> 
+                        <td>{{ $sancion->user->name }}</td> 
                     @endif
-                    <td>{{ $prestamo->libro->nombre }}</td>
-                    <td>{{ $prestamo->fecha_plazo }}</td>
-                    @if(@Auth::user()->hasRole('administrador'))
-                        <td>{{ $prestamo->fecha_entrega }}</td>
-                    @endif
+                    <td>{{ $sancion->fecha_inicio }}</td>
+                    <td>{{ $sancion->retraso }}</td>
                     
                     <td>
                         @if (@Auth::user()->hasRole('administrador'))
-                            <a class="btn btn-sm btn-primary" href="{{ url('gestion/devolver',$prestamo->id) }}">Entregar</a>
+                            <a class="btn btn-sm btn-danger" href="">Enviar Mensaje</a>
                         @endif
                     </td>
                 </tr>

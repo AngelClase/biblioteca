@@ -3,6 +3,7 @@
 use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\LibroController;
 use App\Http\Controllers\PrestamoController;
+use App\Http\Controllers\SancionController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
@@ -17,10 +18,10 @@ use Illuminate\Support\Facades\Auth;
 |
 */
 Route::resource('libros', LibroController::class);
-Route::resource('prestamos', PrestamoController::class)->middleware("auth");
 Route::resource('prestamo', PrestamoController::class)->middleware("auth");
 Route::resource('devolver', PrestamoController::class)->middleware("auth");
 Route::resource('categorias', CategoriaController::class)->middleware("auth");
+Route::resource('sancion', SancionController::class)->middleware("auth");
 
 Route::get('/', function () {
     return view('welcome');
@@ -29,8 +30,7 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/libros', [App\Http\Controllers\LibroController::class, 'index'])->name('libros');
-Route::get('/prestamos', [App\Http\Controllers\PrestamoController::class, 'index'])->name('prestamos');
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::get('/gestion/prestamo/{id}', [App\Http\Controllers\PrestamoController::class, 'prestar'])->name('prestamo');
+Route::get('/gestion/prestamo/{id}', [App\Http\Controllers\PrestamoController::class, 'prestar'])->name('prestar');
 Route::get('/gestion/devolver/{id}', [App\Http\Controllers\PrestamoController::class, 'devolver'])->name('devolver');
 Route::get('categorias', [App\Http\Controllers\CategoriaController::class, 'devolver'])->name('categorias');
