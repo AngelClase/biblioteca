@@ -20,17 +20,18 @@ use Illuminate\Support\Facades\Auth;
 Route::resource('libros', LibroController::class);
 Route::resource('prestamo', PrestamoController::class)->middleware("auth");
 Route::resource('devolver', PrestamoController::class)->middleware("auth");
-Route::resource('categorias', CategoriaController::class)->middleware("auth");
+Route::resource('categoria', CategoriaController::class);
 Route::resource('sancion', SancionController::class)->middleware("auth");
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('libros');
 });
 
 Auth::routes();
 
+Route::get('/sancionar/{id}', [SancionController::class, 'create'])->name('sancionar');
 Route::get('/libros', [App\Http\Controllers\LibroController::class, 'index'])->name('libros');
+Route::get('/libros/buscar/{search}', [App\Http\Controllers\LibroController::class, 'buscar'])->name('buscarLibros');
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/gestion/prestamo/{id}', [App\Http\Controllers\PrestamoController::class, 'prestar'])->name('prestar');
 Route::get('/gestion/devolver/{id}', [App\Http\Controllers\PrestamoController::class, 'devolver'])->name('devolver');
-Route::get('categorias', [App\Http\Controllers\CategoriaController::class, 'devolver'])->name('categorias');

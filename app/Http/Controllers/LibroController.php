@@ -14,10 +14,18 @@ class LibroController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(String $search = null)
     {
         $libros = Libro::all();
-
+        if($search != null){
+            $libros = Libro::where('nombre','like', $search);
+        }
+        if(Auth::user() != null){
+            if(GestionController::isPenalizado(Auth::user()->id)){
+                return view('libro.index', compact('libros'))->with('danger','Estás sancionado, por favor, revisa tus sanciones. No podrás prestar libros hasta que se pase la sanción.');
+            }
+        }
+        
         return view('libro.index', compact('libros'));
     }
 
@@ -33,7 +41,17 @@ class LibroController extends Controller
         
     }
 
-
+    public function buscar(String $search){
+        
+  
+        
+        /*
+        if(GestionController::isPenalizado(Auth::user()->id)){
+            return view('libro.index', compact('libros'))->with('danger','Estás sancionado, por favor, revisa tus sanciones. No podrás prestar libros hasta que se pase la sanción.');
+        }
+        return view('libro.index', compact('libros'));
+        */
+    }
 
     /**
      * Store a newly created resource in storage.

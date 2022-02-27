@@ -133,6 +133,10 @@
                 <p>El usuario tiene un retraso de {{ $prestamo->retraso }} días, se penalizará</p>
             </div>
         </div>
+        <div class="rol-col3">
+            <a class="btn btn-sm btn-primary" href="{{ route('sancionar',$prestamo->id) }}">Sancionar</a>
+        </div>
+        
         
     @endif
 

@@ -3,7 +3,7 @@
 <div class="row">
     <div class="col-lg-12 margin-tb">
         <div class="pull-left">
-            <h2>Añadir Nuevo Libro</h2>
+            <h2>Añadir Nueva Categoria</h2>
         </div>    
 </div>
 </div>
@@ -19,7 +19,7 @@
     </div>
 @endif
  
-<form action="{{ route('categorias.store') }}" method="POST" enctype="multipart/form-data">
+<form action="{{ route('categoria.store') }}" method="POST" enctype="multipart/form-data">
 @csrf     
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12">

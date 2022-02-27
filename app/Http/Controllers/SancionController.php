@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Sancion;
 use Illuminate\Http\Request;
+use App\Models\Prestamo;
+use Illuminate\Support\Facades\DB;
 
 class SancionController extends Controller
 {
@@ -26,10 +28,12 @@ class SancionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(int $id)
     {
+
+        $prestamo = DB::table('prestamos')->where('id',$id)->first();
         GestionController::isAdmin();
-        return view('sancion.create');
+        return view('sancion.create', compact('prestamo'));
     }
 
     /**
@@ -41,13 +45,14 @@ class SancionController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'user_id' => 'required|min:17|max:17',
+            'user_id' => 'required|min:1|max:17',
+            'fecha_inicio' => 'required',
             'retraso' => 'required|min:1|max:255',
         ]);    
 
         $input = $request->all();        
         Sancion::create($input);       
-        return redirect()->route('sancion')->with('success','Sancion created successfully.');
+        return redirect()->route('sancion.index')->with('success','Sancion created successfully.');
 
     }
 

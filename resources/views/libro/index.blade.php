@@ -1,10 +1,15 @@
 @extends('layouts.app')
 
+    
 @section('content')
+    @if (isset($_REQUEST["search"] ) && $_REQUEST["search"] != null)
+    {{ header(route('libros',$_REQUEST["search"])); }}
+    @endif
+
     <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="text-center">
-                <h2 class="">Libros</h2>
+                <h2 class="text-center">Libros</h2>
             </div>     
             
             @guest
@@ -22,6 +27,20 @@
                     <hr>
                 @endif
             @endguest
+
+            <div class="row">
+                <div class="col-4"></div>
+                <div class="col-1"><strong>Buscar libros</strong> </div>
+                <div class="col-5">
+                    <form class="d-inline-block" action="{{ route('libros') }}" method="GET">
+                        @csrf
+                        @method('GET')
+                        <input class="form-control" type="text" name="search" placeholder="Buscar Libro por nombre...">
+                    </form>
+                </div>
+                <div class="col-4"></div>
+                <br><br>
+            </div>
         </div>
     </div>    
  

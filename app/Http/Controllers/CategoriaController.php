@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Categoria;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class CategoriaController extends Controller
 {
@@ -56,7 +57,7 @@ class CategoriaController extends Controller
      */
     public function show(Categoria $categoria)
     {
-        return view('categoria.show',compact('categoria'));
+        
     }
 
     /**
@@ -65,9 +66,10 @@ class CategoriaController extends Controller
      * @param  \App\Models\Categoria  $categoria
      * @return \Illuminate\Http\Response
      */
-    public function edit(Categoria $categoria)
+    public function edit(int $id)
     {
         GestionController::isAdmin();
+        $categoria = DB::table('categorias')->where('id',$id)->first();
         return view('categoria.edit',compact('categoria'));
     }
 
@@ -81,11 +83,11 @@ class CategoriaController extends Controller
     public function update(Request $request, Categoria $categoria)
     {
         $request->validate([
+            'id' => 'required',
             'nombre' => 'required|min:3|max:255'
         ]);        
         $input = $request->all();        
-
-        $categoria->update($input);       
+        DB::table('categorias')->where('id',$input['id'])->update(['nombre' => $input['nombre']]);      
         return redirect()->route('categoria.index')->with('success','Categoria updated successfully.');
 
     }
@@ -96,11 +98,11 @@ class CategoriaController extends Controller
      * @param  \App\Models\Categoria  $categoria
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Categoria $categoria)
+    public function destroy(int $id)
     {
         GestionController::isAdmin();
-        $categoria->delete();
+        $categoria = DB::table('categorias')->where('id',$id)->delete();
         return redirect()->route('categoria.index')
-        ->with('success','Categoria deleted successfully');
+        ->with('success','La categoría ha sido eliminada con exito');
     }
 }

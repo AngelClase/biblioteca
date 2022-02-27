@@ -19,7 +19,7 @@
             </ul>
         </div>
     @endif    
-<form action="{{ route('categorias.update',$categoria->id) }}" method="POST" enctype="multipart/form-data"> 
+<form action="{{ route('categoria.update',$categoria->id) }}" method="POST" enctype="multipart/form-data"> 
         @csrf
         @method('PUT')
          <div class="row">
@@ -32,7 +32,7 @@
             <div class="col-xs-12 col-sm-12 col-md-12">
                 <div class="form-group">
                     <strong>Nombre:</strong>
-                    <input type="text" name="isbn" value="{{ $categoria->nombre }}" class="form-control" placeholder="{{ $categoria->nombre }}">
+                    <input type="text" name="nombre" value="{{ $categoria->nombre }}" class="form-control" placeholder="{{ $categoria->nombre }}">
                 </div>
             </div>
             

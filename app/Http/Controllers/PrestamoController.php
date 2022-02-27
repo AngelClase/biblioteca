@@ -31,13 +31,13 @@ class PrestamoController extends Controller
         GestionController::isAdmin();
         $prestamo = Prestamo::where('id','=',$id)->first();
         $tieneRetraso = $this->aplicarRetraso($prestamo);
-        $libro = $libro = Libro::where('id','=',$prestamo->libro_id)->first();
+        $libro = Libro::where('id','=',$prestamo->libro_id)->first();
         $user = User::where('id','=',$prestamo->user_id)->first();
 
         return view('prestamo.devolver', compact('prestamo', 'tieneRetraso', 'libro', 'user'));
     }
 
-    private function aplicarRetraso(Prestamo $prestamo){
+    public function aplicarRetraso(Prestamo $prestamo){
         $fecha_entrega = new DateTime(date("Y-m-d"));
         $fecha_plazo = new DateTime($prestamo->fecha_plazo);
 
@@ -46,7 +46,7 @@ class PrestamoController extends Controller
         if ($fecha_entrega > $fecha_plazo) {
             DB::table('prestamos')
             ->where('id', $prestamo->id)
-            ->update(['retraso' => $dias]);
+            ->update(['retraso' => $dias->d]);
         }
         return ($fecha_entrega > $fecha_plazo);
 
@@ -102,7 +102,7 @@ class PrestamoController extends Controller
      */
     public function store(Request $request)
     {
-        if($this->cuantosPrestados($request->user_id) < 2){
+        if($this->cuantosPrestados($request->user_id) < 2 && GestionController::isPenalizado($request->user_id) == false){
             $input = $request->validate([
                 'libro_id' => 'required|min:1|max:255',
                 'user_id' => 'required|min:1|max:255',
@@ -116,7 +116,8 @@ class PrestamoController extends Controller
 
             return redirect()->route('libros')->with('success','Prestamo created successfully.');
         }else{
-            return redirect()->route('libros')->with('danger','El usuario ha prestado mas de dos libros.');
+            $mensaje = (GestionController::isPenalizado($request->user_id) == true) ? 'El usuario está penalizado.' : 'El usuario ha prestado mas de dos libros.';
+            return redirect()->route('libros')->with('danger',$mensaje);
         }
         
 

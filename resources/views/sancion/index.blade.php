@@ -31,24 +31,25 @@
                     <th>Usuario</th>      
                 @endif
                 <th>Fecha Inicio</th>
-                <th>Dias de retraso</th>
-                <th>Fecha Entrega</th>
-                <th></th>
+                <th>Dias iniciales de penalizacion</th>
+                @if (@Auth::user()->hasRole('administrador'))
+                    <th></th>    
+                @endif
+                
             </tr>
             @foreach ($sanciones as $sancion)
-                @if(($sancion->user_id == @Auth::user()->id && $sancion->retraso <= 0) || @Auth::user()->hasRole('administrador'))
+                @if(($sancion->user_id == @Auth::user()->id) || @Auth::user()->hasRole('administrador'))
                 <tr>
                     @if (@Auth::user()->hasRole('administrador'))
                         <td>{{ $sancion->user->name }}</td> 
                     @endif
                     <td>{{ $sancion->fecha_inicio }}</td>
                     <td>{{ $sancion->retraso }}</td>
-                    
-                    <td>
-                        @if (@Auth::user()->hasRole('administrador'))
+                    @if (@Auth::user()->hasRole('administrador'))
+                        <td>
                             <a class="btn btn-sm btn-danger" href="">Enviar Mensaje</a>
-                        @endif
-                    </td>
+                        </td>
+                    @endif
                 </tr>
                 @endif
             
